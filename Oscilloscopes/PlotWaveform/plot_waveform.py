@@ -63,7 +63,7 @@ class OscilloscopeWaveform:
         if not device:
             raise ConnectionError("No oscilloscope found")
 
-        device.timeout = 50000
+        device.timeout = 10000
         device_id = device.query("*IDN?")
         self.logger.info(f"Connected to: {device_id}")
         return device
@@ -95,15 +95,13 @@ class OscilloscopeWaveform:
 
         # Configure channel settings
         self.device.write(f"CHAN{channel}:DATa:TYPE {data_transfer_type}")
-        data_cmd = f"CHAN{channel}:DATa:PACK? {data_length}, {data_transfer_type}"
-        self.device.query("SEQUence:WAIT? 1")
-        self.device.write("SINGLE")  # Single acquisition mode
         
-
+        self.device.query("SEQUence:WAIT? 1")
+       
         # Capture waveform data
         start_time = time.time()
         try:
-            
+            data_cmd = f"CHAN{channel}:DATa:PACK? {data_length}, {data_transfer_type}"
             data = self.device.query_binary_values(data_cmd, datatype='B')
         except pyvisa.errors.VisaIOError:
             self.logger.error("Failed to capture waveform data")
@@ -214,7 +212,7 @@ class OscilloscopeWaveform:
 def main():
     """Main function to demonstrate waveform plotting."""
     try:
-        waveform_analyzer = OscilloscopeWaveform(url="192.168.10.121", protocol="raw")
+        waveform_analyzer = OscilloscopeWaveform(url="192.168.10.176", protocol="raw")
         waveform_analyzer.plot_waveform(channel=1, data_transfer_type="RAW")
     except Exception as e:
         logger.error(f"Error in main: {e}")
