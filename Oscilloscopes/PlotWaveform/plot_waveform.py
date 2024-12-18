@@ -89,19 +89,21 @@ class OscilloscopeWaveform:
 
         self.device.write("RUN")
         # If the Memory Depth is too high this will take a long time so set it to 1M
-        self.device.write("ACQUire:MDEPth 1000000")
+        self.device.write("ACQUire:MDEPth 100000")
         memory_depth = self.device.query("ACQuire:MDEPth?")
         self.logger.info(f"Memory Depth: {memory_depth}")
 
         # Configure channel settings
         self.device.write(f"CHAN{channel}:DATa:TYPE {data_transfer_type}")
         data_cmd = f"CHAN{channel}:DATa:PACK? {data_length}, {data_transfer_type}"
+        self.device.query("SEQUence:WAIT? 1")
         self.device.write("SINGLE")  # Single acquisition mode
+        
 
         # Capture waveform data
         start_time = time.time()
         try:
-            self.device.query("SEQUence:WAIT? 1")
+            
             data = self.device.query_binary_values(data_cmd, datatype='B')
         except pyvisa.errors.VisaIOError:
             self.logger.error("Failed to capture waveform data")
@@ -212,7 +214,7 @@ class OscilloscopeWaveform:
 def main():
     """Main function to demonstrate waveform plotting."""
     try:
-        waveform_analyzer = OscilloscopeWaveform() #url="192.168.10.121", protocol="raw")
+        waveform_analyzer = OscilloscopeWaveform(url="192.168.10.121", protocol="raw")
         waveform_analyzer.plot_waveform(channel=1, data_transfer_type="RAW")
     except Exception as e:
         logger.error(f"Error in main: {e}")
