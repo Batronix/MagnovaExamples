@@ -125,28 +125,7 @@ def main():
     plt.ylabel('Amplitude (V)')
     plt.title('Waveform Data')
     plt.show()
-    scope = OscilloscopeWaveformREST("192.168.10.121")
-    samples, metadata = scope.get_waveform_data(channel=2)
     
-    # Create time base and plot
-    x = np.linspace(metadata["StartTime"], metadata["EndTime"], 
-                    len(samples), endpoint=True)
-    plt.plot(x, samples)
-    plt.xlabel('Time (s)')
-    plt.ylabel('Amplitude (V)')
-    plt.title('Waveform Data')
-    plt.show()
-    scope = OscilloscopeWaveformREST("192.168.10.121")
-    samples, metadata = scope.get_waveform_data(channel=2)
-    
-    # Create time base and plot
-    x = np.linspace(metadata["StartTime"], metadata["EndTime"], 
-                    len(samples), endpoint=True)
-    plt.plot(x, samples)
-    plt.xlabel('Time (s)')
-    plt.ylabel('Amplitude (V)')
-    plt.title('Waveform Data')
-    plt.show()
 
 if __name__ == "__main__":
     main()

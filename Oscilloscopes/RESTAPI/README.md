@@ -22,6 +22,24 @@ Basic usage:
 python rest_api.py
 ```
 
+## Examples
+
+### Basic REST API
+```python
+python rest_api.py
+```
+
+### Waveform Acquisition
+```python
+python rest_waveform_test.py
+```
+The waveform test example demonstrates how to:
+- Acquire waveform data using REST API
+- Configure oscilloscope settings (timebase, channels)
+- Download and plot waveform data
+- Process measurement data using numpy
+- Visualize results with matplotlib
+
 ## Benefits
 
 - Platform independent
