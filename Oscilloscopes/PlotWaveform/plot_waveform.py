@@ -101,6 +101,7 @@ class OscilloscopeWaveform:
         # Capture waveform data
         start_time = time.time()
         try:
+            self.device.query("SEQUence:WAIT? 1")
             data = self.device.query_binary_values(data_cmd, datatype='B')
         except pyvisa.errors.VisaIOError:
             self.logger.error("Failed to capture waveform data")
