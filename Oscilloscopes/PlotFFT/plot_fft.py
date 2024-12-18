@@ -78,6 +78,7 @@ class OscilloscopeFFT:
         Returns:
             Tuple of frequency and magnitude arrays
         """
+        self.device.write("FFT1:STATe 1")
         # Select channel
         self.device.write(f"FFT1:SOURce CHANnel{channel}")
         # Ensure single acquisition mode
