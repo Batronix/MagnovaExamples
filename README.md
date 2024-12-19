@@ -71,4 +71,4 @@ Feel free to contribute additional examples or improvements to existing ones. Pl
 
 ## License
 
-This project is available for use and modification. Please check individual examples for specific licensing information.
+This project is licensed under the [MIT License](LICENSE).
