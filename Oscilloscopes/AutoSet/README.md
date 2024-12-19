@@ -47,7 +47,7 @@ autoset = OscilloscopeAutoset()
 autoset.autoset()
 
 # Or connect via network
-autoset = OscilloscopeAutoset("192.168.10.121")
+autoset = OscilloscopeAutoset("[YOUR_INSTRUMENT_IP]")
 autoset.autoset()
 ```
 

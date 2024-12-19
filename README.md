@@ -15,7 +15,7 @@ SCPIExamples/
 │   ├── PlotWaveform/      # Waveform capture and visualization
 │   ├── PlotFFT/           # FFT analysis and visualization
 │   ├── Simple/            # Basic PyVISA usage example
-│   └── RESTAPI/          # Modern REST API control
+│   └── RESTAPI/           # Modern REST API control
 ```
 
 ## Examples

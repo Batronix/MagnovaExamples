@@ -89,7 +89,7 @@ class OscilloscopeWaveform:
 
         self.device.write("RUN")
         # If the Memory Depth is too high this will take a long time so set it to 1M
-        self.device.write("ACQUire:MDEPth 100000")
+        self.device.write("ACQUire:MDEPth 1000000")
         memory_depth = self.device.query("ACQuire:MDEPth?")
         self.logger.info(f"Memory Depth: {memory_depth}")
 

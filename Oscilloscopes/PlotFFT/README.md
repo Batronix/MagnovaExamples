@@ -33,7 +33,7 @@ fft_analyzer.plot_fft(channel=1)
 Network connection:
 ```python
 # Connect via network
-fft_analyzer = OscilloscopeFFT(url="192.168.1.100", protocol="raw")
+fft_analyzer = OscilloscopeFFT(url="[YOUR_INSTRUMENT_IP]", protocol="raw")
 fft_analyzer.plot_fft(channel=1)
 ```
 
