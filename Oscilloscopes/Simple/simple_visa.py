@@ -8,7 +8,7 @@ import pyvisa
  
 # Open the instrument using a USBTMC connection
 rm = pyvisa.ResourceManager()
-instr = rm.open_resource('USB0::0x19B2::0x0030::000333::INSTR')
+instr = rm.open_resource('USB0::0x19B2::0x0030::[YOUR_SERIAL_NUMBER]::INSTR')
  
 # Query the unique identifier
 print(instr.query('*IDN?'))
