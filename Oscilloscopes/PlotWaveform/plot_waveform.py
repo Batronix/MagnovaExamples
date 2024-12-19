@@ -212,7 +212,7 @@ class OscilloscopeWaveform:
 def main():
     """Main function to demonstrate waveform plotting."""
     try:
-        waveform_analyzer = OscilloscopeWaveform(url="192.168.10.176", protocol="raw")
+        waveform_analyzer = OscilloscopeWaveform(url="[YOUR_INSTRUMENT_IP]", protocol="raw")
         waveform_analyzer.plot_waveform(channel=1, data_transfer_type="RAW")
     except Exception as e:
         logger.error(f"Error in main: {e}")

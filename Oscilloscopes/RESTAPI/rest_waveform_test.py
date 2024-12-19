@@ -114,7 +114,7 @@ class OscilloscopeWaveformREST:
 
 def main():
     # Example usage
-    scope = OscilloscopeWaveformREST("192.168.10.121")
+    scope = OscilloscopeWaveformREST("[YOUR_INSTRUMENT_IP]")
     samples, metadata = scope.get_waveform_data(channel=1)
     
     # Create time base and plot

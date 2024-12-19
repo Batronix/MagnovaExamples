@@ -63,7 +63,7 @@ class OscilloscopeFFT:
         if not device:
             raise ConnectionError("No oscilloscope found")
 
-        device.timeout = 50000
+        device.timeout = 10000
         device_id = device.query("*IDN?")
         self.logger.info(f"Connected to: {device_id}")
         return device
@@ -81,9 +81,9 @@ class OscilloscopeFFT:
         self.device.write("FFT1:STATe 1")
         # Select channel
         self.device.write(f"FFT1:SOURce CHANnel{channel}")
-        # Ensure single acquisition mode
+        # Set to RUN mode
         self.device.write("RUN")
-        time.sleep(0.5)  # Wait for acquisition
+        self.device.query("SEQUence:WAIT? 1")  # Wait for acquisition
 
         # Get FFT data
         fft_data = self.device.query_binary_values("FFT1:DATA:PACKed?", datatype='B')
@@ -130,7 +130,7 @@ class OscilloscopeFFT:
             plt.plot(freq, magnitude)
             plt.grid(True)
             plt.xlabel('Frequency (Hz)')
-            plt.ylabel('Amplitude (dB)')
+            plt.ylabel('Amplitude (dBm)')
             plt.title(f'Channel {channel} FFT')
             plt.show()
 
@@ -141,7 +141,7 @@ class OscilloscopeFFT:
 def main():
     """Main function to demonstrate FFT plotting."""
     try:
-        fft_analyzer = OscilloscopeFFT(url="192.168.10.121", protocol="raw")
+        fft_analyzer = OscilloscopeFFT(url="[YOUR_INSTRUMENT_IP]", protocol="raw")
         fft_analyzer.plot_fft(channel=1)
     except Exception as e:
         logger.error(f"Error in main: {e}")

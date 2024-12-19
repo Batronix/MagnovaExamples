@@ -38,4 +38,4 @@ def main(url):
     plt.show()
 
 if __name__ == "__main__":
-    main("192.168.10.121")
+    main("[YOUR_INSTRUMENT_IP]")
