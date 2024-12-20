@@ -315,7 +315,7 @@ class OscilloscopeAutoset:
             time.sleep(0.1)
         
         # Set timebase
-        self.device.write("TIMe:SCALe 0.02")  # 20ms/div
+        self.device.write("TIMebase:SCALe 0.02")  # 20ms/div
         self.device.write("ACQuire:MODE PDETect")
         self.device.write("ACQuire:TEXPansion 0")
         

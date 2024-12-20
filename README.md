@@ -15,7 +15,8 @@ SCPIExamples/
 │   ├── PlotWaveform/      # Waveform capture and visualization
 │   ├── PlotFFT/           # FFT analysis and visualization
 │   ├── Simple/            # Basic PyVISA usage example
-│   └── RESTAPI/           # Modern REST API control
+│   ├── RESTAPI/           # Modern REST API control
+│   └── WebControl/        # Web-based oscilloscope control interface
 ```
 
 ## Examples
@@ -51,6 +52,13 @@ SCPIExamples/
    - No VISA drivers required
    - JSON-based command structure
    - Async operation support
+
+6. [**Web Control Interface**](./Oscilloscopes/WebControl/)
+   - Browser-based oscilloscope control
+   - Real-time waveform display
+   - Interactive time scale and memory depth control
+   - Continuous acquisition mode
+   - Modern, responsive UI using Bootstrap
 
 ## Requirements
 

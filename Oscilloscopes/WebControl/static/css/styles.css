@@ -1,0 +1,39 @@
+.time-scale-container {
+    text-align: right;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.time-scale-value {
+    font-size: 1.1em;
+    white-space: nowrap;
+}
+
+#timeScaleSlider {
+    display: inline-block;
+}
+
+.rs-handle {
+    background-color: #007bff !important;
+}
+
+.rs-border {
+    border-color: #007bff !important;
+}
+
+.rs-range-color {
+    background-color: #007bff !important;
+}
+
+.rs-path-color {
+    background-color: #dee2e6 !important;
+}
+
+#waveformPlot {
+    width: 100%;
+    min-height: 400px;
+    height: auto;
+}

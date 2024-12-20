@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oscilloscope Web Control</title>
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.css" rel="stylesheet">
+    <link href="/static/css/styles.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.35.3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.js"></script>
+    <script src="/static/js/timeScale.js"></script>
+    <script src="/static/js/memoryDepth.js"></script>
+    <script src="/static/js/channelControl.js"></script>
+    <script src="/static/js/waveform.js"></script>
+    <script src="/static/js/acquisition.js"></script>
+    <script src="/static/js/connection.js"></script>
+    <script src="/static/js/main.js"></script>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Oscilloscope Web Control</h1>
+        
+        <!-- Connection Panel -->
+        <div class="card mb-4">
+            <div class="card-header">Connection</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <span class="input-group-text">IP</span>
+                            <input type="text" class="form-control" id="ipAddress" placeholder="192.168.1.100">
+                            <span class="input-group-text">Port</span>
+                            <input type="number" class="form-control" id="port" value="8080">
+                            <button class="btn btn-primary" type="button" id="connectBtn">Connect</button>
+                        </div>
+                        <small class="text-muted">Status: <span id="connectionStatus" class="text-danger">Disconnected</span></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="card mb-4">
+            <div class="card-header">Controls</div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col">
+                        <button id="singleBtn" class="btn btn-secondary me-2">Single</button>
+                        <button id="runBtn" class="btn btn-secondary me-2">Run</button>
+                        <button id="getWaveformBtn" class="btn btn-primary me-2">Get Waveform</button>
+                        <div class="form-check form-check-inline align-middle">
+                            <input class="form-check-input" type="checkbox" id="continuousAcquisition">
+                            <label class="form-check-label" for="continuousAcquisition">Continuous</label>
+                        </div>
+                        <span id="acquisitionStatus" class="ms-2 text-muted"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <span class="input-group-text">Memory Depth</span>
+                            <input type="number" class="form-control" id="memoryDepth" value="20000" min="20000" max="200000000" step="10000">
+                            <button class="btn btn-primary" id="setMemoryDepthBtn">Set</button>
+                            <button id="refreshBtn" class="btn btn-info">Refresh Settings</button>
+                        </div>
+                        <small class="text-muted" id="memoryDepthRange">Range: 20,000 - 200,000,000 points</small>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="time-scale-container">
+                            <div class="time-scale-value">Time Scale: <span id="timeScaleDisplay">100 µs/div</span></div>
+                            <div id="timeScaleSlider"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="mb-2">
+                            <div class="btn-group" role="group" aria-label="Channel Selection">
+                                <input type="radio" class="btn-check" name="channelSelect" id="channel1" value="1" checked>
+                                <label class="btn btn-outline-primary" for="channel1">CH1</label>
+                                
+                                <input type="radio" class="btn-check" name="channelSelect" id="channel2" value="2">
+                                <label class="btn btn-outline-primary" for="channel2">CH2</label>
+                                
+                                <input type="radio" class="btn-check" name="channelSelect" id="channel3" value="3">
+                                <label class="btn btn-outline-primary" for="channel3">CH3</label>
+                                
+                                <input type="radio" class="btn-check" name="channelSelect" id="channel4" value="4">
+                                <label class="btn btn-outline-primary" for="channel4">CH4</label>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="btn-group" role="group" aria-label="Channel States">
+                                <input type="checkbox" class="btn-check" name="channelState" id="state1" value="1">
+                                <label class="btn btn-outline-success" for="state1">CH1 ON</label>
+                                
+                                <input type="checkbox" class="btn-check" name="channelState" id="state2" value="2">
+                                <label class="btn btn-outline-success" for="state2">CH2 ON</label>
+                                
+                                <input type="checkbox" class="btn-check" name="channelState" id="state3" value="3">
+                                <label class="btn btn-outline-success" for="state3">CH3 ON</label>
+                                
+                                <input type="checkbox" class="btn-check" name="channelState" id="state4" value="4">
+                                <label class="btn btn-outline-success" for="state4">CH4 ON</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Plot -->
+        <div class="card">
+            <div class="card-header">Waveform</div>
+            <div class="card-body">
+                <div id="waveformPlot"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
