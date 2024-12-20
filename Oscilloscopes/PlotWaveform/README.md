@@ -46,3 +46,65 @@ The script includes error handling for:
 - Data capture errors
 - Metadata parsing issues
 - Waveform processing errors
+
+## C++ Implementation
+
+A C++ version of the waveform plotting tool is also provided, offering the same functionality with native C++ performance.
+
+### Additional Requirements for C++
+
+- CMake 3.10 or later
+- C++17 compatible compiler
+- NI-VISA library
+- Python 3.x with NumPy (for matplotlib-cpp)
+- matplotlib-cpp (header-only library)
+
+### Building the C++ Version
+
+1. Install the NI-VISA library from National Instruments
+2. Create a build directory:
+```bash
+mkdir build
+cd build
+```
+
+3. Configure with CMake:
+```bash
+cmake ../ -G "Visual Studio 17 2022" -A x64
+```
+
+4. Build the project:
+```bash
+cmake --build . --config Release
+```
+
+The executable will be created in `build/Release/oscilloscope_waveform.exe`
+
+### Using the C++ Version
+
+The C++ implementation provides the same features as the Python version:
+- USB and network connection support
+- Raw and HiSLIP protocol support
+- Automatic device detection for USB
+- Waveform capture and visualization
+- Metadata parsing and display
+
+Basic usage:
+```cpp
+// Using network connection
+OscilloscopeWaveform waveform_analyzer("192.168.1.100", "raw");
+waveform_analyzer.plotWaveform(1, "ALL", "RAW");
+
+// Using USB connection (auto-detect)
+OscilloscopeWaveform waveform_analyzer;
+waveform_analyzer.plotWaveform(1);
+```
+
+### Code Organization
+
+- `oscilloscope_waveform.hpp`: Class declaration and interface
+- `oscilloscope_waveform.cpp`: Implementation of the waveform analyzer
+- `main.cpp`: Example usage
+- `CMakeLists.txt`: Build configuration
+
+The C++ implementation follows modern C++ practices with RAII for resource management, exception handling for error cases, and strong type safety.
