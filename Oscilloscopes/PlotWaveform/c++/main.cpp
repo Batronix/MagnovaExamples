@@ -6,7 +6,7 @@ int main() {
         // Create waveform analyzer instance
         // Replace [YOUR_INSTRUMENT_IP] with your oscilloscope's IP address
         // or leave empty for USB connection
-        OscilloscopeWaveform waveform_analyzer("192.168.10.121", "raw");
+        OscilloscopeWaveform waveform_analyzer("[YOUR_INSTRUMENT_IP]", "raw");
         
         // Capture waveform from channel 1 and save to CSV
         waveform_analyzer.saveWaveformToCSV(1, "waveform_data.csv", "ALL", "RAW");
