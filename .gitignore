@@ -2,3 +2,6 @@ venv/
 .vscode/
 build/
 Oscilloscopes/RESTAPI/__pycache__/
+Oscilloscopes/PlotWaveform/rust/target/
+Oscilloscopes/PlotWaveform/rust/Cargo.lock
+Oscilloscopes/PlotWaveform/rust/waveform.png

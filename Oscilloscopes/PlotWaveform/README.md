@@ -108,3 +108,30 @@ waveform_analyzer.plotWaveform(1);
 - `CMakeLists.txt`: Build configuration
 
 The C++ implementation follows modern C++ practices with RAII for resource management, exception handling for error cases, and strong type safety.
+
+## Rust Implementation
+
+A Rust version of the waveform plotting tool is also available in the `rust` directory. It provides mostly the same functionality as the Python and C++ versions:
+
+### Requirements
+- Rust
+- visa-rs
+- anyhow (for error handling)
+- byteorder (for binary data parsing)
+- plotters (for waveform visualization)
+- log and env_logger (for logging)
+
+### Usage
+```bash
+# Build and run from the rust directory
+cargo run
+```
+
+### Configuration
+The tool supports the following options:
+- Network connection via IP address (optional)
+- Channel selection (1-4)
+- Data transfer type (RAW or V)
+- Memory depth configuration
+
+The output will be saved as `waveform.png` in the current directory.
