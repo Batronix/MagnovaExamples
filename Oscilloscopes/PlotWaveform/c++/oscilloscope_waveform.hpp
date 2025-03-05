@@ -93,4 +93,7 @@ private:
 
     // Helper function to save raw data for debugging
     void saveRawData(const std::vector<uint8_t>& data, const std::string& filename);
+    std::string statusToString(ViStatus status);
+    // Helper function to query device information
+    void queryDeviceInfo(ViSession rm, const char* resource);
 };

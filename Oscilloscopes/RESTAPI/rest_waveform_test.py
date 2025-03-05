@@ -45,6 +45,7 @@ class OscilloscopeWaveformREST:
 
     def _send_command(self, command: str) -> Any:
         """Send a SCPI command via REST API."""
+        self.logger.info(f"Sending command: {command}")
         response = requests.post(self.base_url, json=command)
         response.raise_for_status()
         return response.json() if response.text else None
@@ -87,7 +88,7 @@ class OscilloscopeWaveformREST:
         # Start acquisition and wait
         self._send_command("RUN")
         start_time = time.time()
-        self._send_command("SEQUence:WAIT 10")
+        self._send_command("SEQuence:WAIT? 10")
         self.logger.info(f"Sequence wait time: {time.time() - start_time:.5f} seconds.")
         
         # Request waveform data

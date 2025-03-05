@@ -119,9 +119,8 @@ class OscilloscopeChannel:
     def _read_measurement(self, mtype: str) -> float:
         """Read a specific measurement value"""
         self.device.write(f"MEASurement:{mtype}:AVERage? CHAN{self.number}")
-        raw = self.device.read_raw()
-        value = struct.unpack('<d', raw[:-1])[0]
-        return value
+        value = self.device.read()
+        return float(value)
 
 class OscilloscopeAutoset:
     def __init__(self, device_url: Optional[str] = None):

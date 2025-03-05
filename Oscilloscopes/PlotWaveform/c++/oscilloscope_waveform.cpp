@@ -34,38 +34,46 @@ void OscilloscopeWaveform::connect() {
         }
         status = viOpen(defaultRM_, resource_str.c_str(), VI_NULL, VI_NULL, &device_);
     } else {
-        // USB connection - search for Batronix device
+        // USB connection - search for all VISA devices
+        std::cout << "Searching for VISA devices..." << std::endl;
+        
         ViFindList find_list;
         ViUInt32 ret_count;
-        status = viFindRsrc(defaultRM_, "USB?*INSTR", &find_list, &ret_count, nullptr);
+        char desc[VI_FIND_BUFLEN];
+        bool found_batronix = false;
+        
+        // Find all VISA instruments
+        status = viFindRsrc(defaultRM_, "?*", &find_list, &ret_count, desc);
         
         if (status >= VI_SUCCESS) {
-            char desc[VI_FIND_BUFLEN];
-            while (ret_count--) {
-                status = viFindNext(find_list, desc);
-                if (status < VI_SUCCESS) break;
-
-                ViSession temp_device;
-                status = viOpen(defaultRM_, desc, VI_NULL, VI_NULL, &temp_device);
-                if (status < VI_SUCCESS) continue;
-
-                unsigned char idn_response[256];
-                ViUInt32 ret_count;
-                viWrite(temp_device, (ViBuf)"*IDN?\n", 6, &ret_count);
-                viRead(temp_device, (ViBuf)idn_response, sizeof(idn_response), &ret_count);
-                std::string idn_str(reinterpret_cast<char*>(idn_response), ret_count);
-
-                if (idn_str.find("Batronix") != std::string::npos) {
-                    device_ = temp_device;
-                    break;
+            std::cout << "Found " << ret_count << " VISA devices" << std::endl;
+            
+            // Iterate through all devices
+            for (ViUInt32 i = 0; i < ret_count && !found_batronix; i++) {
+                if (i > 0) {
+                    status = viFindNext(find_list, desc);
+                    if (status < VI_SUCCESS) continue;
                 }
-                viClose(temp_device);
+                
+                std::cout << "\nDevice " << (i + 1) << ": " << desc << std::endl;
+                queryDeviceInfo(defaultRM_, desc);
+                
+                if (std::string(desc).find("0x19B2::0x0030") != std::string::npos) {
+                    status = viOpen(defaultRM_, desc, VI_NULL, VI_NULL, &device_);
+                    if (status >= VI_SUCCESS) {
+                        std::cout << "\nConnected to Batronix device: " << desc << std::endl;
+                        found_batronix = true;
+                    }
+                }
             }
+            
             viClose(find_list);
+        } else {
+            std::cout << "Failed to find any VISA devices: " << statusToString(status) << std::endl;
         }
     }
 
-    if (status < VI_SUCCESS) {
+    if (!device_) {
         throw std::runtime_error("No oscilloscope found");
     }
 
@@ -127,7 +135,7 @@ std::pair<std::vector<double>, std::vector<double>> OscilloscopeWaveform::getWav
     viWrite(device_, (ViBuf)cmd.c_str(), static_cast<ViUInt32>(cmd.length()), &ret_count);
     
     // Wait for acquisition
-    cmd = "SEQUence:WAIT? 1\n";
+    cmd = "SEQuence:WAIT? 1\n";
     viWrite(device_, (ViBuf)cmd.c_str(), static_cast<ViUInt32>(cmd.length()), &ret_count);
     char wait_response[10];
     viRead(device_, (ViBuf)wait_response, sizeof(wait_response), &ret_count);
@@ -430,4 +438,49 @@ void OscilloscopeWaveform::saveRawData(const std::vector<uint8_t>& data, const s
         throw std::runtime_error("Failed to open file: " + filename);
     }
     file.write(reinterpret_cast<const char*>(data.data()), data.size());
+}
+
+// status int to string
+std::string OscilloscopeWaveform::statusToString(ViStatus status) {
+    switch (status) {
+        case VI_SUCCESS:
+            return "VI_SUCCESS";
+        case VI_ERROR_INV_OBJECT:
+            return "VI_ERROR_INV_OBJECT";
+        case VI_ERROR_NSUP_OPER:
+            return "VI_ERROR_NSUP_OPER";
+        case VI_ERROR_INV_EXPR:
+            return "VI_ERROR_INV_EXPR";
+        case VI_ERROR_RSRC_NFOUND:
+            return "VI_ERROR_RSRC_NFOUND";
+        default:
+            return "Unknown status";
+    }
+}
+
+void OscilloscopeWaveform::queryDeviceInfo(ViSession rm, const char* resource) {
+    ViSession temp_device;
+    ViStatus status = viOpen(rm, resource, VI_NULL, VI_NULL, &temp_device);
+    
+    if (status >= VI_SUCCESS) {
+        // Query device identity
+        unsigned char idn_response[256];
+        ViUInt32 response_count;
+        status = viWrite(temp_device, (ViBuf)"*IDN?\n", 6, &response_count);
+        if (status >= VI_SUCCESS) {
+            status = viRead(temp_device, (ViBuf)idn_response, sizeof(idn_response), &response_count);
+            if (status >= VI_SUCCESS) {
+                std::string idn_str(reinterpret_cast<char*>(idn_response), response_count);
+                std::cout << "  ID: " << idn_str;
+            } else {
+                std::cout << "  Failed to read device ID: " << statusToString(status);
+            }
+        } else {
+            std::cout << "  Failed to query device ID: " << statusToString(status);
+        }
+        viClose(temp_device);
+    } else {
+        std::cout << "  Failed to open device: " << statusToString(status);
+    }
+    std::cout << std::endl;
 }

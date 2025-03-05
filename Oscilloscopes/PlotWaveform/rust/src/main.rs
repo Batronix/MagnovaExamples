@@ -116,7 +116,7 @@ impl OscilloscopeWaveform {
         )?;
         
         // Wait for acquisition
-        (&self.device).write_all(b"SEQUence:WAIT? 1\n")?;
+        (&self.device).write_all(b"SEQuence:WAIT? 1\n")?;
         let mut wait_response = String::new();
         buf_reader.read_line(&mut wait_response)?;
         
